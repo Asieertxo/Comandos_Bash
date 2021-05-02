@@ -15,6 +15,7 @@ cat /etc/passwd | cut -c1 | sort | uniq -c
 
 #que letras no se utilizan como inicial de ningun usuario
 echo {a..z} $(cat /etc/passwd | cut -c1) | tr ' ' '\n' | sort | uniq -u
+
 (echo {a..z} | tr ' ' '\n'; cat /etc/passwd | cut -c1 | tr ' ' '\n') | sort | uniq -u
 
 
@@ -67,19 +68,9 @@ cat /etc/passwd | cut -f1 -d: | xargs -I{} bash -c "echo -n {}:; echo -n {} | wc
 
 
 #mostrar el nombre de usuario y el nombre de grupo
+cat /etc/passwd | cut -f1,4 -d: | xargs -I{} bash -c "echo {} | cut -f1 -d: | tr '\n' ':' ; cat /etc/group | grep -E ^[^:]+:[^:]+:\$(echo '{}' | cut -f2 -d:): | cut -f1 -d:"
 
-
+join -1 2 -2 2 -t: <(cat /etc/passwd | cut -f1,4 -d: | sort -k2 -t:) <(cat /etc/group | cut -f1,3 -d: | sort -k2 -t:) | cut -f2,3 -d:
 
 #mostrar aquellos usuarios que su nombre no coincida con el grupo
-
-
-
-
-
-
-
-
-
-
-
-
+join -1 2 -2 2 -t: <(cat /etc/passwd | cut -f1,4 -d: | sort -k2 -t:) <(cat /etc/group | cut -f1,3 -d: | sort -k2 -t:) | cut -f2,3 -d: | grep -vE "^([^:]+):\1$" | cut -f1 -d:
