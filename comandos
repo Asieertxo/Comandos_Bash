@@ -1,0 +1,85 @@
+#!/bin/bash
+
+
+#cuantos usuarios hay en el sistema
+cat /etc/passwd | wc -l
+
+
+#cual es el ultimo usuario alfabeticamente
+cat /etc/passwd | cut -f1 -d | sort | tail -1
+
+
+#cuantas letras diferentes tienen las iniciales de los usuarios
+cat /etc/passwd | cut -c1 | sort | uniq -c
+
+
+#que letras no se utilizan como inicial de ningun usuario
+echo {a..z} $(cat /etc/passwd | cut -c1) | tr ' ' '\n' | sort | uniq -u
+(echo {a..z} | tr ' ' '\n'; cat /etc/passwd | cut -c1 | tr ' ' '\n') | sort | uniq -u
+
+
+#cual es usuario con mayor UID del sistema (nº del 3 campo)
+cat /etc/passwd | cut -f3 -d: | sort -n | tail -1
+
+
+#cual es el grupo principal de usuarios (campo 4)que mas uruarios tiene
+cat /etc/passwd | cut -f4 -d: | sort -n | uniq -c | sort | tr -s ' ' ':' | tail -1 | cut -f3 -d:
+
+
+#mostrar todos los usuarios que sus nombres empiezan por vocal
+cat /etc/passwd | cut -f1 -d: | grep -E "^[aeiou]"
+
+
+#mostrar usuarios que tengan dos vocales seguidas en su nombre
+cat /etc/passwd | cut -f1 -d: | grep -Ei "[aeiou][aeiou]"
+
+
+#usuarios con dos letras iguales en su nombre
+cat /etc/passwd | cut -f1 -d: | grep -Ei "[aeiou][aeiou]"
+
+
+#buscar usuarios formados por letras no repetidas
+cat /etc/passwd | cut -f1 -d: | grep -Ev "([a-z].*).*\1"
+
+
+#cual es la letra que mas se repite en el nombre de usuarios
+cat /etc/passwd | cut -f1 -d: | grep -o [a-z] | tr 'A-Z' 'a-z' | sort | uniq -c | sort -n | tail -1 | tr -s ' ' ':' | cut -f3 -d:
+
+
+#que letra no se encuenta en ningun usuario
+(echo {a..z} | tr ' ' '\n' ; cat /etc/passwd | cut -f1 -d: | grep -o [a-z] | tr 'A-Z' 'a-z') | sort | uniq -u
+
+
+#cuantos caracteres tiene cada usuario
+cat /etc/passwd | cut -f1 -d: | xargs -I{} bash -c "echo -n {}: ; echo -n {} | wc -c"
+
+
+#mostrar el usuarios que mas caracteres tiene en su nombre
+cat /etc/passwd | cut -f1 -d: | xargs -I{} bash -c "echo -n {}: ; echo -n {} | wc -c" | sort -n -k2 -t: | cut -f1 -d: | tail -1
+
+
+#mostrar la longitud mas habitual de los nombres de usuario
+cat /etc/passwd | cut -f1 -d: | xargs -I{} bash -c "echo -n {} | wc -c" | sort -n | uniq -c | tr -s ' ' ':' | sort -n -k2 -t: | cut -f3 -d: | tail -1
+
+
+#mostrar los nombres de usuarios de longitud mas habitual
+cat /etc/passwd | cut -f1 -d: | xargs -I{} bash -c "echo -n {}:; echo -n {} | wc -c" | sort -n -k2 -t: | grep ":$(cat /etc/passwd | cut -f1 -d: | xargs -I{} bash -c "echo -n {} | wc -c" | sort -n | uniq -c | tr -s ' ' ':' | sort -n -k2 -t: | cut -f3 -d: | tail -1)$" | cut -f1 -d:
+
+
+#mostrar el nombre de usuario y el nombre de grupo
+
+
+
+#mostrar aquellos usuarios que su nombre no coincida con el grupo
+
+
+
+
+
+
+
+
+
+
+
+
