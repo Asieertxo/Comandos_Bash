@@ -1,0 +1,25 @@
+#! /bin/bash
+
+
+#echo $@ | tr ' ' '\n' | sort | tail -1
+
+<<omit
+mayor=$(echo $@ | tr ' ' '\n' | sort | tail -1)
+echo $* | tr ' ' '\n' | grep -x "$mayor"
+omit
+
+
+mayor=$1
+shift
+for num in $* ; do
+    if [ $num -gt $mayor ] ; then
+        mayor=$num
+    fi
+done
+echo $mayor #poner esto o quitar el shift
+
+for num in $* ; do
+    if [ $num -eq $mayor ] ; then
+        echo $num
+    fi
+done
