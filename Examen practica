@@ -1,0 +1,102 @@
+#! /bin/bash
+
+#Ejercicio 1
+
+ancho=$(echo $* | cut -f1 -d/)
+alto=$(echo $* | cut -f2 -d/)
+
+
+echo "$ancho"*"$alto" | bc
+
+
+
+
+
+
+#Ejercicio 3
+
+ancho1=$(echo $1 | cut -f1 -d/)
+alto1=$(echo $1 | cut -f2 -d/)
+
+ancho2=$(echo $2 | cut -f1 -d/)
+alto2=$(echo $2 | cut -f2 -d/)
+
+
+area1=$(($ancho1 * $alto1))
+area2=$(($ancho2 * $alto2))
+
+
+if [ $area1 -le $area2 ] ; then
+    echo $?
+else
+    echo $?
+fi
+
+
+
+
+#Ejercicio 4
+
+ancho1=$(echo $1 | cut -f1 -d/)
+alto1=$(echo $1 | cut -f2 -d/)
+area1=$(($ancho1 * $alto1))
+
+while read numero ; do
+
+    ancho2=$(echo $numero | cut -f1 -d/)
+    alto2=$(echo $numero | cut -f2 -d/)
+    area2=$(($ancho2 * $alto2))
+
+    if [ $area1 -le $area2 ] ; then
+        echo $numero
+    fi
+
+
+done
+
+
+
+
+
+
+
+#Ejercicio 5
+
+
+ancho=$(echo $* | cut -f1 -d/)
+alto=$(echo $* | cut -f2 -d/)
+
+for (( i=0 ; i<$alto; i++ )) ; do
+    for (( j=0 ; j<$ancho; j++ )) ; do
+        
+           echo -n "*"
+        
+    done
+       
+    echo -e "\n"    
+
+done
+
+
+
+#Ejercicio 6
+
+
+ancho=$(echo $1 | cut -f1 -d/)
+alto=$(echo $1 | cut -f2 -d/)
+caracter=$(echo $2)
+
+for (( i=0 ; i<$alto; i++ )) ; do
+    for (( j=0 ; j<$ancho; j++ )) ; do
+        
+       if [ $i -eq 0 ] || [ $j -eq 0 ] || [ $i -eq $(echo $alto - 1 | bc) ] || [ $j -eq $(echo $ancho - 1 | bc ) ] ; then
+           echo -n "*"
+       else
+           echo -n "$caracter"
+       fi         
+        
+    done
+       
+    echo -e "\n"    
+
+done
