@@ -1,0 +1,47 @@
+#! /bin/bash
+
+
+while read numero ; do
+
+    es_valido=true #saber si es valido
+    pos=0 #saber la posicion que estamos
+    punto=0 #saber los . que ha habido
+    tiene_numero=false
+
+    for digito in $(echo $numero | grep -o .) ; do #con el grep -o . ponemos cada cosa la pone en una linea
+
+        #los caracteres validos
+        caracteres_validos=[0-9]
+
+        #comprobar que al menos tenga un numero
+        if [[ $digito == $caracteres_validos ]] ; then
+            tiene_numero=true
+        fi
+
+        #si es la primera posicion añadimos el + y - como validos
+        if [ $pos -eq 0 ] ; then
+            caracteres_validos=[-+0-9]
+        fi
+
+        #comprobamos si es un . y si lo es vemos que haya habido ninguno mas y lo ponemos como valido
+        if [[ $digito == "." ]] ; then
+            let punto++
+            if [ $punto -lt 2 ] ; then
+                caracteres_validos=[-+.0-9]
+            fi
+        fi
+
+        #comprobamos si es un caracter valido, si entra es que no es valido
+        if [[ $digito != $caracteres_validos ]] ; then
+            es_valido=false #lo ponemos como que no es valido
+            break #un caracter invalido ya salimos, por eficiencia y porq sino podria dar errores validandolo despues
+        fi
+
+        let pos++ #aumentamos la posicion en 1
+    done
+
+    #si acaba como valid quiere decir que es un numero
+    if [[ $es_valido = true ]] && [[ $tiene_numero = true ]] ; then
+        echo $numero
+    fi
+done
