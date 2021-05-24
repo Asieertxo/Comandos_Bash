@@ -115,3 +115,36 @@ for (( i=0 ; i<$alto; i++ )) ; do
     echo -e "\n"    
 
 done
+
+
+
+
+
+
+#.................Triangulo.....................................................................................................................
+height=$1
+row=1
+
+function print_row () {
+ num_chars=$1
+ print_char=$2
+
+ char=1
+
+ while [ $char -le $num_chars ]; do
+  echo -n "$print_char"
+  let char++
+ done  
+}
+
+while [ $row -le $height ] ; do
+
+ spaces=$(( height - row ))
+ print_row $spaces " "
+
+ asterisks=$(( row*2 -1 ))
+ print_row $asterisks "*"
+
+ echo
+ let row++
+done
