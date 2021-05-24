@@ -117,6 +117,28 @@ for (( i=0 ; i<$alto; i++ )) ; do
 done
 
 
+#.................Examen escrito................................................................................................................
+#Ejercicio2
+
+echo 5*{1..1000}';' | bc #en una instruccion, resultado de multiplicar el 5 * numeros naturales menores que 1001
+
+
+#Ejercicio3
+mkdir -p {a/a{1..3},b/b{1..3},c/c{1..3}} #crear estructura en una sola instruccion
+ls */*1                                  #lista los que acaben en 1
+cd c/c3                                  #situate en c/c3
+touch ../../a/a2/test                    #desde c/c3 cree en a/a2 el archivo test
+
+#Ejercicio4
+cat /etc/passwd | cut -f1 -d: | grep -o ".$" | sort | uniq -d #que hace esto??
+    #salen las letras de nombres de usuario que se repitan como caracter final
+
+#Ejercicio6
+"^.{2,5}[0-9]$"     #que sea entre 3 y 6 caracteres y acaba en numero
+".{2,5}[0-9]"       #con que contenga lo anterior vale
+"([0-9].[0-9])\1"   #un numero, lo que sea, otro numero y luego que se repita
+"^[^aeiouAEIOU]+$"  #
+
 
 
 
