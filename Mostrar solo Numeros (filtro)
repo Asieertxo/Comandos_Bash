@@ -1,0 +1,193 @@
+#! /bin/bash
+
+#echo $@ | tr ' ' '\n' | grep -Ex "[+-]?[0-9]*\.?[0-9]*" | grep [0-9]
+
+
+for numero in $* ; do
+
+    es_valido=true #saber si es valido
+    pos=0 #saber la posicion que estamos
+    punto=0 #saber los . que ha habido
+    tiene_numero=false
+
+    for digito in $(echo $numero | grep -o .) ; do #con el grep -o . ponemos cada cosa la pone en una linea
+
+        #los caracteres validos
+        caracteres_validos=[0-9]
+
+        #comprobar que al menos tenga un numero
+        if [[ $digito == $caracteres_validos ]] ; then
+            tiene_numero=true
+        fi
+
+        #si es la primera posicion añadimos el + y - como validos
+        if [ $pos -eq 0 ] ; then
+            caracteres_validos=[-+0-9]
+        fi
+
+        #comprobamos si es un . y si lo es vemos que haya habido ninguno mas y lo ponemos como valido
+        if [[ $digito == "." ]] ; then
+            let punto++
+            if [ $punto -lt 2 ] ; then
+                caracteres_validos=[-+.0-9]
+            fi
+        fi
+
+        #comprobamos si es un caracter valido, si entra es que no es valido
+        if [[ $digito != $caracteres_validos ]] ; then
+            es_valido=false #lo ponemos como que no es valido
+            break #un caracter invalido ya salimos, por eficiencia y porq sino podria dar errores validandolo despues
+        fi
+
+        let pos++ #aumentamos la posicion en 1
+    done
+
+    #si acaba como valid quiere decir que es un numero
+    if [[ $es_valido = true ]] && [[ $tiene_numero = true ]] ; then
+        echo $numero
+    fi
+done
+
+exit
+        
+<<omit #con bucles normales como en java
+
+for number in $* ; do
+
+    is_valid=true #saber si es valido
+    punto=0 #saber lo . que ha habido
+    num_digits=$(echo -n $number | wc -c)
+
+    for (( pos=1 ; pos<=$num_digits ; pos++)) ; do
+
+        digit=$(echo $number | cut -c$pos)
+
+        #los caracteres validos
+        valid_chars=[0-9]
+
+        #si es la primera posicion añadimos el + y - como validos
+        if [ $pos -eq 1 ] ; then
+            valid_chars=[-+0-9]
+        fi
+
+        #comprobamos si es un . y si lo es vemos que haya habido ninguno mas y lo ponemos como valido
+        if [[ $digit == "." ]] ; then
+            let punto++
+            if [ $punto -lt 2 ] ; then
+                valid_chars=[-+.0-9]
+            fi
+        fi
+
+        #comprobamos si es un caracter valido
+        if [[ $digit != $valid_chars ]] ; then
+            is_valid=false
+            break
+        fi
+
+    done
+
+    #si acaba como valid quiere decir que es un numero
+    if [[ $is_valid = true ]] ; then
+        echo $number
+    fi
+done
+
+
+omit
+<<omit
+
+
+
+function is_valid_char() {  
+ char=$1
+ valid_chars=$2
+
+ [[ $char == [$valid_chars] ]]
+}
+
+function is_valid_number() {
+ number=$1
+ is_valid=false
+ has_decimal_point=false
+ num_digits=${#number}
+ pos=0
+
+ while [ $pos -lt $num_digits ]; do
+  digit=${number:$pos:1}  
+  valid_chars=0-9
+
+  is_valid_char $digit $valid_chars && is_valid=true
+ 
+  [ $has_decimal_point = false ] && valid_chars=.$valid_chars
+
+  [ $pos -eq 0 ] && valid_chars=-+$valid_chars
+
+  if ! is_valid_char $digit $valid_chars ; then
+   is_valid=false
+   break
+  fi
+
+  [ $digit = "." ] && has_decimal_point=true
+  let pos++
+ done
+
+ [ $is_valid = true ]
+}
+
+
+function print_valid_numbers {
+  
+ while read number ; do 
+  is_valid_number $number && echo $number
+ done
+}
+omit
+
+
+#pasandole valores por tuberia que coge con read
+<<omit
+while read numero ; do
+
+    es_valido=true #saber si es valido
+    pos=0 #saber la posicion que estamos
+    punto=0 #saber los . que ha habido
+    tiene_numero=false
+
+    for digito in $(echo $numero | grep -o .) ; do #con el grep -o . ponemos cada cosa la pone en una linea
+
+        #los caracteres validos
+        caracteres_validos=[0-9]
+
+        #comprobar que al menos tenga un numero
+        if [[ $digito == $caracteres_validos ]] ; then
+            tiene_numero=true
+        fi
+
+        #si es la primera posicion añadimos el + y - como validos
+        if [ $pos -eq 0 ] ; then
+            caracteres_validos=[-+0-9]
+        fi
+
+        #comprobamos si es un . y si lo es vemos que haya habido ninguno mas y lo ponemos como valido
+        if [[ $digito == "." ]] ; then
+            let punto++
+            if [ $punto -lt 2 ] ; then
+                caracteres_validos=[-+.0-9]
+            fi
+        fi
+
+        #comprobamos si es un caracter valido, si entra es que no es valido
+        if [[ $digito != $caracteres_validos ]] ; then
+            es_valido=false #lo ponemos como que no es valido
+            break #un caracter invalido ya salimos, por eficiencia y porq sino podria dar errores validandolo despues
+        fi
+
+        let pos++ #aumentamos la posicion en 1
+    done
+
+    #si acaba como valid quiere decir que es un numero
+    if [[ $es_valido = true ]] && [[ $tiene_numero = true ]] ; then
+        echo $numero
+    fi
+done
+omit
