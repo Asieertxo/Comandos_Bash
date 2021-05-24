@@ -9,7 +9,22 @@ alto=$(echo $* | cut -f2 -d/)
 echo "$ancho"*"$alto" | bc
 
 
+#Ejericcio 2
+read entrada
+ancho=$(echo $entrada | cut -f1 -d/)
+alto=$(echo $entrada | cut -f2 -d/)
+area=$(echo $ancho*$alto | bc)
 
+if echo $area | grep -E "\." >/dev/null; then
+    area_entero=$(echo $area | cut -f1 -d.)
+    area_decimal=$(echo $area | cut -f2 -d. | cut -c1,2)
+    echo -n "El area es: "
+    echo $area_entero.$area_decimal
+else
+    echo -n "El area es: "
+    echo $area
+
+fi
 
 
 
